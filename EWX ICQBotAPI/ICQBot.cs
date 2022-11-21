@@ -12,8 +12,6 @@ namespace EWXICQBotAPI
         private string _botApiKey;
         private const string _botApiUrl = "https://api.icq.net/bot/v1/";
 
-        public BotAPI _api = new BotAPI();
-
         ////    Main bot constructor
         public ICQBot(string token)
         {
