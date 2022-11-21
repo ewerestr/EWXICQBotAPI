@@ -17,7 +17,7 @@ namespace EWXICQBotAPI
         public event EventHandler leftChatMembers;
         public event EventHandler callbackQuery;
 
-        public void Event(ICQBot instance, ICQAbsEvent ev)
+        public void Event(ICQBot instance, ICQAEvent ev)
         {
             switch (ev.type)
             {

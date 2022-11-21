@@ -44,7 +44,7 @@ namespace EWXICQBotAPI
                     {
                         if (events.events.Length > 0)
                         {
-                            foreach (ICQAbsEvent ev in events.events)
+                            foreach (ICQAEvent ev in events.events)
                             {
                                 if (!noSpot.Contains(ev.payload.msgId)) _instance.GetEventHandler().Event(_instance, ev);
                                 if (ev.type == "deletedMessage") noSpot.Add(ev.payload.msgId);

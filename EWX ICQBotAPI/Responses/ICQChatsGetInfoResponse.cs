@@ -6,7 +6,7 @@ namespace EWXICQBotAPI.Responses
     public class ICQChatsGetInfoResponse
     {
         // service fields
-        private ICQBotInstance _instance;
+        private ICQBot _instance;
 
         // common fields
         private bool _status;
@@ -29,7 +29,7 @@ namespace EWXICQBotAPI.Responses
         private bool _public;
         private bool _moderation;
 
-        public ICQChatsGetInfoResponse(ICQBotInstance instance, ICQAbsChatsGetInfoResponse abstractResponse, string chatId)
+        public ICQChatsGetInfoResponse(ICQBot instance, ICQAChatsGetInfoResponse abstractResponse, string chatId)
         {
             _instance = instance;
             _status = abstractResponse.ok;
