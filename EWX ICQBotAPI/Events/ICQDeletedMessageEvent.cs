@@ -15,9 +15,9 @@ namespace EWXICQBotAPI.Events
             return base._event.payload.msgId;
         }
 
-        public ICQChat GetChat()
+        /*public ICQChat GetChat()
         {
             return _instance.GetChat(base._event.payload.chat.chatId);
-        }
+        }*/
     }
 }

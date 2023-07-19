@@ -1,17 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using EWXICQBotAPI;
+using EWXICQBotAPI.Responses.AbstractResponses;
+using System;
+using System.IO;
 
 namespace EWXICQBotAPI_Tests
 {
     internal class Program
     {
+        private static ICQBot _bot;
+        private static string _token;
+
         static void Main(string[] args)
         {
-
-
+            LoadToken();
+            Console.Write("Init bot... ");
+            _bot = new ICQBot(_token);
+            Console.WriteLine("Done!\n");
+            Console.Write("Test 1: SelfGet... ");
+            Console.WriteLine(SelfGet() ? "Passed!" : "Failed!");
             ////    Basic tests, test that API methods works
 
             //  Test /self/get
@@ -65,6 +71,47 @@ namespace EWXICQBotAPI_Tests
             //  Test /events/get
 
             ////    Global test
+
+            Console.WriteLine("All tests passed. Press any key to close this window");
+            Console.ReadKey();
+        }
+
+        private static void LoadToken()
+        {
+            string filepath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + Path.DirectorySeparatorChar + "EWXICQTest"; // Path.DirectorySeparatorChar + "session.ewx"
+            if (!Directory.Exists(filepath)) Directory.CreateDirectory(filepath);
+            filepath += Path.DirectorySeparatorChar + "session.ewx";
+            if (File.Exists(filepath))
+            {
+                string token = File.ReadAllText(filepath);
+                _token = token;
+            }
+            else
+            {
+                Console.WriteLine("Enter your token below:");
+                string input = Console.ReadLine();
+                _token = input;
+                try
+                {
+                    StreamWriter file = new StreamWriter(filepath);
+                    file.WriteLine(input);
+                    file.Close();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("An error occured. See the stacktrace below:");
+                    Console.WriteLine(ex.StackTrace);
+                }
+            }
+        }
+
+        // Tests
+
+        private static bool SelfGet()
+        {
+            ICQASelfGetResponse response = _bot.APIAbsSelfGet();
+            if (response.ok) return true;
+            return false;
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿
+using EWXICQBotAPI.Responses.AbstractResponses;
 using System.IO;
 using System.Net;
+using System.Text.Json;
 using System.Threading;
 using System.Web;
 
@@ -12,46 +14,99 @@ namespace EWXICQBotAPI
         private string _botApiKey;
         private const string _botApiUrl = "https://api.icq.net/bot/v1/";
 
+        private bool _lastEventIdSelfControl = false;
+        private uint _lastEventId;
+
+
         ////    Main bot constructor
         public ICQBot(string token)
         {
             _botApiKey = token;
+            _lastEventIdSelfControl = true;
+            loadLastEventId();
+        }
+
+        public ICQBot(string token, uint lastEventId)
+        {
+            _botApiKey = token;
+            _lastEventIdSelfControl = false;
+            _lastEventId = lastEventId;
         }
 
         ////    API methods block 
-        //  Self
+        ///     SelfGet
+        //      Normal
         public string APISelfGet()
         {
             string response = SendRequest(_botApiUrl + "self/get?token=" + _botApiKey);
             //convert to obj;
             return null;
         }
-        //  Messages
+        //      Abs
+        public ICQASelfGetResponse APIAbsSelfGet()
+        {
+            string response = SendRequest(_botApiUrl + "self/get?token=" + _botApiKey);
+            ICQASelfGetResponse absresponse = JsonSerializer.Deserialize<ICQASelfGetResponse>(response);
+            return absresponse;
+        }
+        //      Raw
+        public string APIRawSelfGet()
+        {
+            string response = SendRequest(_botApiUrl + "self/get?token=" + _botApiKey);
+            return response;
+        }
+
+        ///     Messages
+        //      Normal
         public string APIMessagesSendText(string chatId, string text) // just text without formats, attachments and others
         {
             string response = SendRequest(_botApiUrl + "messages/sendText?chatId=" + chatId + "&text=" + HttpUtility.UrlEncode(text) + "&token=" + _botApiKey);
             //convert to obj;
             return null;
         }
-        
+        //      Abs
+
+        //      Raw
+        public string APIRawMessagesSendText(string chatId, string text) // just text without formats, attachments and others
+        {
+            string response = SendRequest(_botApiUrl + "messages/sendText?chatId=" + chatId + "&text=" + HttpUtility.UrlEncode(text) + "&token=" + _botApiKey);
+            return response;
+        }
+
         /* 
          * Here will be methods for message generator soon
          * Messages.SendFile    (GET,POST)
          * Messages.SendVoice   (GET,POST)
-         */ 
-        
+         */
+
+        ///     MessagesEditText
+        //      Normal
         public string APIMessagesEditText(string chatId, int msgId, string text, string inlineKeyboardMarkup = null)
         {
             string response = SendRequest(_botApiUrl + "messages/sendText?chatId=" + chatId + "&msgId=" + msgId + "&text=" + HttpUtility.UrlEncode(text) + "&token=" + _botApiKey);
             //convert to obj;
             return null;
         }
+        //      Abs
 
+        //      Raw
+        public string APIRawMessagesEditText(string chatId, int msgId, string text, string inlineKeyboardMarkup = null)
+        {
+            string response = SendRequest(_botApiUrl + "messages/sendText?chatId=" + chatId + "&msgId=" + msgId + "&text=" + HttpUtility.UrlEncode(text) + "&token=" + _botApiKey);
+            return response;
+        }
+
+        ///
         public string APIMessagesDeleteMessage(string chatId, int msgId)
         {
             string response = SendRequest(_botApiUrl + "messages/deleteMessages?chatId=" + chatId + "&msgId=" + msgId+ "&token=" + _botApiKey);
             //convert to obj;
             return null;
+        }
+        public string APIRawMessagesDeleteMessage(string chatId, int msgId)
+        {
+            string response = SendRequest(_botApiUrl + "messages/deleteMessages?chatId=" + chatId + "&msgId=" + msgId + "&token=" + _botApiKey);
+            return response;
         }
 
         // APIMessagesDeleteMessages for a few messages
@@ -225,7 +280,24 @@ namespace EWXICQBotAPI
 
         ////    Utils methods block
 
+        ////    Service
+        
+        private static void loadLastEventId()
+        {
 
+        }
+
+        public string Poll()
+        {
+            string url = _botApiUrl + "events/get?token=" + _botApiKey + "&lastEventId=" + _lastEventId + "&pollTime=" + _pollTimeout;
+            url = SendRequest(url);
+            return url;
+        }
+
+        public void SetLastEventId(uint lastId)
+        {
+            _lastEventId = lastId;
+        }
     }
 
     

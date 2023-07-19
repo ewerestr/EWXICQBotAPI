@@ -13,7 +13,7 @@ namespace EWXICQBotAPI.Events
         {
             _instance = instance;
             _event = ev;
-            _type = _instance.ParseEventType(_event.type);
+            //_type = _instance.ParseEventType(_event.type);
         }
 
         public ICQEventType GetEventType()

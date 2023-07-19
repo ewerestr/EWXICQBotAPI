@@ -60,8 +60,7 @@ namespace EWXICQBotAPI
 
         public bool IsAlive()
         {
-            if (_longpollThread != null) if (_longpollThread.IsAlive) return true;
-            return false;
+            return _longpollThread != null ? (_longpollThread.IsAlive ? true : false) : false;
         }
     }
 }
